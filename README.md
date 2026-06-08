@@ -68,3 +68,5 @@ cd rag-deployment
 
 pip install groq streamlit sentence-transformers pypdf python-dotenv numpy
 
+3. Create a `.env` file
+   GROQ_API_KEY=your_groq_api_key_here
