@@ -61,5 +61,10 @@ A live RAG-powered Document Q&A system that:
 
 1. Clone the repository
 
-git clone https://github.com/PrashikSawant/day16-rag-deployment.git /
-cd day16-rag-deployment
+git clone https://github.com/PrashikSawant/RAG-Document-QA-HuggingFace \
+cd rag-deployment
+
+2. Install dependencies
+
+pip install groq streamlit sentence-transformers pypdf python-dotenv numpy
+
