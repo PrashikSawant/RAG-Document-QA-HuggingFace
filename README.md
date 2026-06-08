@@ -69,4 +69,47 @@ cd rag-deployment
 pip install groq streamlit sentence-transformers pypdf python-dotenv numpy
 
 3. Create a `.env` file
-   GROQ_API_KEY=your_groq_api_key_here
+
+GROQ_API_KEY=your_groq_api_key_here
+
+4. Run the app
+
+streamlit run app.py
+
+---
+
+## 🌐 Live Demo
+
+👉 [Try it live on HuggingFace Spaces](https://huggingface.co/spaces/PrashikYS/rag-document-qa)
+
+---
+
+## 📚 What I Learned
+
+- How Docker containers work and why they matter
+- How HuggingFace Spaces hosts AI applications
+- How to debug dependency conflicts in production
+- Why Git LFS exists and when you need it
+- The difference between local development and deployment
+- How environment variables work in cloud platforms
+
+---
+
+## 🗺️ What's Next
+
+- 🔜 FastAPI Backend for Chatbot (Day 17)
+- 🔜 Add Authentication with JWT (Day 18)
+- 🔜 Full Stack AI Application (Day 19)
+
+---
+
+## 👨‍💻 About Me
+
+I am Prashik — an aspiring AI Engineer on a 4-month intensive
+journey to become job-ready in Generative AI Engineering.
+
+Follow my journey on [LinkedIn](https://www.linkedin.com/in/prashik-sawant-ds/)
+
+---
+
+*Started: June 8, 2026 | Status: ✅ Complete | Live: ✅ Deployed*
