@@ -60,3 +60,6 @@ A live RAG-powered Document Q&A system that:
 ## 🚀 How to Run Locally
 
 1. Clone the repository
+
+git clone https://github.com/PrashikSawant/day16-rag-deployment.git /
+cd day16-rag-deployment
