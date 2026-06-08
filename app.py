@@ -103,22 +103,32 @@ st.title("📚 RAG Document Q&A")
 st.caption("Upload PDFs → Ask questions → Get cited answers | Built by Prashik Sawant")
 
 with st.sidebar:
-    st.header("📂 Documents Loaded")
+    st.header("📂 Documents")
 
-    # Auto-load PDFs from repo
-    pdf_files = ["sample_attention.pdf", "sample_resume.pdf"]
+    # Load from URL
+    DEFAULT_PDFS = {
+        "Attention Is All You Need": "https://arxiv.org/pdf/1706.03762",
+    }
 
-    for pdf_path in pdf_files:
-        if os.path.exists(pdf_path):
-            if pdf_path not in st.session_state.uploaded:
-                with st.spinner(f"Loading {pdf_path}..."):
-                    with open(pdf_path, "rb") as f:
-                        text = extract_text_from_bytes(f.read(), pdf_path)
-                    n = add_document(text, pdf_path)
-                    st.session_state.uploaded.add(pdf_path)
-                st.success(f"✅ {pdf_path} — {n} chunks")
-            else:
-                st.success(f"✅ {pdf_path} — loaded")
+    if "initialized" not in st.session_state:
+        st.session_state.initialized = False
+
+    if not st.session_state.initialized:
+        for name, url in DEFAULT_PDFS.items():
+            with st.spinner(f"Loading {name}..."):
+                try:
+                    import urllib.request
+                    with tempfile.NamedTemporaryFile(delete=False, suffix=".pdf") as tmp:
+                        urllib.request.urlretrieve(url, tmp.name)
+                        with open(tmp.name, "rb") as f:
+                            text = extract_text_from_bytes(f.read(), name)
+                        os.unlink(tmp.name)
+                    n = add_document(text, name)
+                    st.session_state.uploaded.add(name)
+                    st.success(f"✅ {name} loaded!")
+                except Exception as e:
+                    st.error(f"❌ Failed to load {name}: {e}")
+        st.session_state.initialized = True
 
     st.divider()
     st.metric("Chunks in memory", len(st.session_state.chunks))
