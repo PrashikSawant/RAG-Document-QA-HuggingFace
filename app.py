@@ -36,9 +36,9 @@ if "messages"   not in st.session_state: st.session_state.messages   = []
 if "uploaded"   not in st.session_state: st.session_state.uploaded   = set()
 
 # ── Helpers ────────────────────────────────────────────────
-def extract_text(file):
+def extract_text_from_bytes(file_bytes, filename):
     with tempfile.NamedTemporaryFile(delete=False, suffix=".pdf") as tmp:
-        tmp.write(file.read())
+        tmp.write(file_bytes)
         path = tmp.name
     reader = PdfReader(path)
     text = "".join(page.extract_text() or "" for page in reader.pages)
@@ -103,32 +103,33 @@ st.title("📚 RAG Document Q&A")
 st.caption("Upload PDFs → Ask questions → Get cited answers | Built by Prashik Sawant")
 
 with st.sidebar:
-    st.header("📂 Upload Documents")
-    files = st.file_uploader("Upload PDF files", type=["pdf"], accept_multiple_files=True)
+    st.header("📂 Documents Loaded")
 
-    if files:
-        for file in files:
-            if file.name not in st.session_state.uploaded:
-                with st.spinner(f"Processing {file.name}..."):
-                    text = extract_text(file)
-                    n = add_document(text, file.name)
-                    st.session_state.uploaded.add(file.name)
-                    st.success(f"✅ {file.name} — {n} chunks added")
+    # Auto-load PDFs from repo
+    pdf_files = ["sample_attention.pdf", "sample_resume.pdf"]
+
+    for pdf_path in pdf_files:
+        if os.path.exists(pdf_path):
+            if pdf_path not in st.session_state.uploaded:
+                with st.spinner(f"Loading {pdf_path}..."):
+                    with open(pdf_path, "rb") as f:
+                        text = extract_text_from_bytes(f.read(), pdf_path)
+                    n = add_document(text, pdf_path)
+                    st.session_state.uploaded.add(pdf_path)
+                st.success(f"✅ {pdf_path} — {n} chunks")
             else:
-                st.info(f"ℹ️ {file.name} already loaded")
+                st.success(f"✅ {pdf_path} — loaded")
 
     st.divider()
     st.metric("Chunks in memory", len(st.session_state.chunks))
 
-    if st.button("🗑️ Clear All"):
-        for key in ["chunks", "embeddings", "sources", "messages"]:
-            st.session_state[key] = []
-        st.session_state.uploaded = set()
+    if st.button("🗑️ Clear Chat"):
+        st.session_state.messages = []
         st.rerun()
 
     st.divider()
     st.markdown("**Built by [Prashik Sawant](https://www.linkedin.com/in/prashik-sawant-ds/)**")
-    st.markdown("Day 16 of 120 — AI Engineering Bootcamp")
+    st.markdown("Day 16 of 30 — AI Engineering Bootcamp")
 
 for msg in st.session_state.messages:
     with st.chat_message(msg["role"]):
